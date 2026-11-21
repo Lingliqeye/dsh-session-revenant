@@ -116,10 +116,11 @@ listed, restored and deleted, and the row says *from the older folder*.
   (`backup` defaults to `true`).
 - `POST /dsh-session-revenant/size` with `{ "sessionId": "…" }`
   → `{ sessionBytes, files, backupBytes }`.
-- `POST /dsh-session-revenant/restart` with `{}` → `{ appPid, executable, script, delayMs }`.
+- `POST /dsh-session-revenant/restart` with `{}` → `{ appPid, executable, helper, watchdogMs, delayMs }`.
 - `GET /dsh-session-revenant/backups` → `{ root, roots, backups: [{ id, sessionId, createdAt, workspacePath, restorable, legacy, bytes, files }] }`.
 - `POST /dsh-session-revenant/restore` with `{ "backup": "<id>" }`
-  → `{ sessionId, restored, attachedTo }`; `409` when the target already exists.
+  → `{ sessionId, restored, attachedTo, flags, problems, contextRow }`; `409`
+  when the session or its log directory already exists.
 - `POST /dsh-session-revenant/discard` with `{ "backup": "<id>" }`
   → `{ backupId, bytes, files }`; `404` when the directory is already gone.
 - `POST /dsh-session-revenant/cleanup` with `{}` (or `{ "days": 30 }`)
@@ -139,5 +140,14 @@ Client halves: one row in `sidebar.workspaces.session.menu.item`, two actions in
 
 See `docs/DETAIL.md` for behaviour, backup location and limitations.
 
-Install from this directory: **Plugins** → **Add plugin** → pick the directory,
-or `plugin_manager` with `install_bundle` and this directory as `target`.
+## Install
+
+In DeepSeek Harness: **Plugins** → **Add plugin** → enter `dsh-session-revenant`.
+
+While developing locally, point `install_bundle` at this directory instead and
+the profile keeps a live link to the sources.
+
+## Licence
+
+MIT. Built for DeepSeek Harness; the sidebar menu, footer and plugin page are
+ordinary DSH client slots, so nothing in the application itself is patched.
