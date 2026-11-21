@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Session revenant",
+    "description": "Adds Delete session to the sidebar session menu: a confirmation dialog that shows the session's size and the backup size, with a checkbox to keep a backup before removing the log, projection cache, search index rows and workspace entry. The plugin page lists every backup, restores one with a button (never overwriting an existing file) and deletes a backup after confirming its size. The sidebar foot carries two controls: Reload page, which rebuilds the interface in about a second, and Restart app, which covers the desktop restart entry that a development-only gate hides. Both can be switched off under Settings on the plugin page.",
+    "detail": "docs/DETAIL.md"
+  }
+}

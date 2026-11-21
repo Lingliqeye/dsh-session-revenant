@@ -1,0 +1,6 @@
+# dsh-session-revenant —— bundle patch
+# Inserts the Host half (HTTP route owning the real deletion) into the profile.
+# The Client half rides the same package through dsh.client in package.json.
+- insert:
+    - id: dsh-session-revenant
+      name: dsh-session-revenant

@@ -1,0 +1,50 @@
+{
+  "name": "dsh-session-revenant",
+  "version": "1.2.0",
+  "description": "Adds Delete session to the sidebar session menu with a confirmation dialog, an optional backup, a backup list you can restore or delete from, configurable backup location, bilingual UI, plus Reload page and Restart app controls.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.png"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "client.js",
+    "context-index.js",
+    "cordis.patch.yml",
+    "docs",
+    "icon.png",
+    "icon.svg",
+    "index.js",
+    "locale/*.json"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "session",
+    "backup",
+    "restore",
+    "delete"
+  ],
+  "engines": {
+    "dsh": ">=0.2.2-rc.5 <0.3.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  }
+}
