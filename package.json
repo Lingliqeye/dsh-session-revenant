@@ -1,6 +1,6 @@
 {
   "name": "dsh-session-revenant",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Adds Delete session to the sidebar session menu with a confirmation dialog, an optional backup, a backup list you can restore or delete from, configurable backup location, bilingual UI, plus Reload page and Restart app controls. Made by 伶俐籡 (Lingliqeye on GitHub; 伶俐籡 on Bilibili, Douyin, Xiaohongshu and Kuaishou).",
   "author": "伶俐籡 (https://github.com/Lingliqeye)",
   "type": "module",

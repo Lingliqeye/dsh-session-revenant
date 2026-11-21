@@ -1,6 +1,6 @@
 # dsh-session-revenant
 
-<img src="https://cdn.jsdelivr.net/gh/Lingliqeye/dsh-session-revenant@main/icon.png" width="96" height="96" alt="A blue whale resting on a speech bubble next to a small bin">
+<img src="https://testingcf.jsdelivr.net/gh/Lingliqeye/dsh-session-revenant@main/icon.png" width="96" height="96" alt="A blue whale resting on a speech bubble next to a small bin">
 
 Three small conveniences for the DeepSeek Harness Web UI: deleting a session,
 reloading or restarting the app from the sidebar, and getting a deleted session
@@ -20,11 +20,11 @@ confirmation dialog:
   Checked: the session is copied to the backup directory, then removed.
   Unchecked: the session is purged for real, with no copy left behind.
 
-![The session menu, with Delete session at the bottom](https://cdn.jsdelivr.net/gh/Lingliqeye/dsh-session-revenant@main/docs/session-menu.png)
+![The session menu, with Delete session at the bottom](https://testingcf.jsdelivr.net/gh/Lingliqeye/dsh-session-revenant@main/docs/session-menu.png)
 
 The dialog reads the sizes before anything is touched:
 
-![The confirmation dialog, showing session size and backup size](https://cdn.jsdelivr.net/gh/Lingliqeye/dsh-session-revenant@main/docs/delete-dialog.png)
+![The confirmation dialog, showing session size and backup size](https://testingcf.jsdelivr.net/gh/Lingliqeye/dsh-session-revenant@main/docs/delete-dialog.png)
 
 ## 2. Reload page and restart app
 
