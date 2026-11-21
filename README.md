@@ -147,6 +147,13 @@ In DeepSeek Harness: **Plugins** → **Add plugin** → enter `dsh-session-reven
 While developing locally, point `install_bundle` at this directory instead and
 the profile keeps a live link to the sources.
 
+## Author
+
+**伶俐籡** — same name on Bilibili, 抖音, 小红书 and 快手;
+[Lingliqeye](https://github.com/Lingliqeye) on GitHub.
+Issues, ideas and pull requests are welcome in
+[the issue tracker](https://github.com/Lingliqeye/dsh-session-revenant/issues).
+
 ## Licence
 
 MIT. Built for DeepSeek Harness; the sidebar menu, footer and plugin page are
