@@ -51,6 +51,7 @@ import { homedir, tmpdir } from 'node:os'
 import { captureContextEntry, restoreContextEntry } from './context-index.js'
 
 const ROUTE_PATH = '/dsh-session-revenant'
+const GUARD_HEADER = 'x-dsh-session-revenant-guard'
 const MAX_BODY_BYTES = 64 * 1024
 const BACKUP_ENV = 'DSH_SESSION_DELETE_BACKUP'
 const RESTART_ENV = 'DSH_SESSION_REAPER_RESTART'
@@ -142,6 +143,7 @@ export function apply(ctx) {
  */
 async function handle(ctx, req, res) {
   try {
+    assertCallerIsDsh(req)
     const action = actionOf(req.url)
     if (action === 'config') {
       await handleConfig(req, res)
@@ -206,6 +208,21 @@ async function handle(ctx, req, res) {
     }
     sendJson(res, 500, { ok: false, error: error instanceof Error ? error.message : String(error) })
   }
+}
+
+/**
+ * Reject callers that are not the DeepSeek Harness page.
+ *
+ * A page on another origin cannot send this header: a custom request header
+ * makes the browser send a CORS preflight first, this route does not answer
+ * preflights, and the browser then withholds the real request. The page's own
+ * fetch is same-origin, so it is never preflighted and always carries it.
+ * @param req - incoming request.
+ */
+function assertCallerIsDsh(req) {
+  const value = req.headers?.[GUARD_HEADER]
+  if (value === '1') return
+  throw new HttpError(403, 'This request did not come from the DeepSeek Harness page.', 'untrusted-caller')
 }
 
 /**

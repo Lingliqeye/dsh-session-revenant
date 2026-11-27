@@ -60,6 +60,22 @@ the derived projection cache, so it is smaller than `sessionBytes`. Sizes are
 measured with `lstat` + a recursive walk; symlinks are counted once, never
 followed. Any other suffix under the prefix answers `404 unknown action`.
 
+## Caller checks
+
+Every route requires the request header `x-dsh-session-revenant-guard: 1`, which
+the Client half attaches to each call it makes. Anything else is answered with
+`403` and the code `untrusted-caller`, before the action is looked at.
+
+The header is the whole defence, and it works because of how browsers treat
+custom request headers: sending one turns a cross-origin request into a
+preflighted one, and this route never answers a preflight, so a page on another
+origin never gets its real request through. A same-origin request from the
+plugin's own page needs no preflight and always carries the header.
+
+This is also why `ctx.connection.requestRejection(req)` is not used here: that
+API only exists from DSH 0.2.3 on, and this plugin still supports 0.2.2. Scripts
+that talk to the API directly (curl, tests) must send the header themselves.
+
 ## Restart
 
 The desktop application builds its own `应用` menu in the Electron main process

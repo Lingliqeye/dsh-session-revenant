@@ -130,6 +130,15 @@ listed, restored and deleted, and the row says *from the older folder*.
   `settings.json` under the DSH home directory (`$DSH_HOME/.session_reaper`, or
   `~/.dsh/.session_reaper` when unset).
 
+Every route insists on the header `x-dsh-session-revenant-guard: 1`,
+which the plugin's own page sends on every call. A page on another origin cannot
+send it: a custom request header makes the browser ask permission with a CORS
+preflight first, these routes never answer preflights, so the browser drops the
+request before it is made. A call without the header gets
+`403 { "code": "untrusted-caller" }`, which is what keeps an unrelated web page
+from deleting sessions or restarting the app. Scripts that call the API directly
+have to send the header too.
+
 Every failure answers `{ ok: false, error, code }`. `error` is an English
 developer message, `code` is a stable identifier the Client half translates, so
 the interface speaks the language DSH is running in.

@@ -38,6 +38,10 @@ window.__ModuleLoader__.load({
     const RELOAD_ID = 'dsh-session-revenant-reload'
     const RELOAD_ORDER = 40
     const STYLE_ID = 'dsh-session-revenant-style'
+    // Every call carries this header. The value is not in the Host's CORS
+    // allow-list, so another origin cannot reach the routes: the preflight is
+    // refused before the request is sent.
+    const GUARD = { 'x-dsh-session-revenant-guard': '1' }
 
     const CSS = `
 .dsh-session-revenant-item{display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;padding:6px 10px;border:0;border-radius:6px;background:transparent;color:var(--dsw-alias-label-primary);font:inherit;font-size:13px;line-height:1.4;text-align:left;cursor:pointer;white-space:nowrap}
@@ -216,7 +220,7 @@ window.__ModuleLoader__.load({
      */
     async function loadSettings() {
       try {
-        const response = await fetch(configUrl(), { headers: { accept: 'application/json' } })
+        const response = await fetch(configUrl(), { headers: { ...GUARD, accept: 'application/json' } })
         const payload = await response.json()
         if (!response.ok || !payload || payload.ok !== true || typeof payload.config !== 'object') return
         setSettings({
@@ -244,7 +248,7 @@ window.__ModuleLoader__.load({
     async function saveSettings(patch) {
       const response = await fetch(configUrl(), {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { ...GUARD, 'content-type': 'application/json' },
         body: JSON.stringify(patch),
       })
       const payload = await response.json()
@@ -284,7 +288,7 @@ window.__ModuleLoader__.load({
     function querySize(sessionId) {
       return fetch(sizeUrl(), {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { ...GUARD, 'content-type': 'application/json' },
         body: JSON.stringify({ sessionId }),
       }).then(async (response) => {
         let payload = null
@@ -610,7 +614,7 @@ window.__ModuleLoader__.load({
           sessionId,
           onConfirm: (withBackup) => fetch(deleteUrl(), {
             method: 'POST',
-            headers: { 'content-type': 'application/json' },
+            headers: { ...GUARD, 'content-type': 'application/json' },
             body: JSON.stringify({ sessionId, backup: Boolean(withBackup) }),
           }).then(async (response) => {
             let payload = null
@@ -710,7 +714,7 @@ window.__ModuleLoader__.load({
           keepOpen: true,
           onConfirm: () => fetch(restartUrl(), {
             method: 'POST',
-            headers: { 'content-type': 'application/json' },
+            headers: { ...GUARD, 'content-type': 'application/json' },
             body: '{}',
           }).then(async (response) => {
             let payload = null
@@ -780,7 +784,7 @@ window.__ModuleLoader__.load({
       const load = React.useCallback(() => {
         let alive = true
         setState((previous) => ({ loading: true, rows: previous.rows, error: false }))
-        fetch(backupsUrl(), { headers: { accept: 'application/json' } })
+        fetch(backupsUrl(), { headers: { ...GUARD, accept: 'application/json' } })
           .then(async (response) => {
             const payload = await response.json().catch(() => null)
             if (!response.ok || !payload || payload.ok !== true) {
@@ -810,7 +814,7 @@ window.__ModuleLoader__.load({
         setNote(null)
         fetch(restoreUrl(), {
           method: 'POST',
-          headers: { 'content-type': 'application/json' },
+          headers: { ...GUARD, 'content-type': 'application/json' },
           body: JSON.stringify({ backup: row.id }),
         })
           .then(async (response) => {
@@ -865,7 +869,7 @@ window.__ModuleLoader__.load({
             setNote(null)
             return fetch(discardUrl(), {
               method: 'POST',
-              headers: { 'content-type': 'application/json' },
+              headers: { ...GUARD, 'content-type': 'application/json' },
               body: JSON.stringify({ backup: id }),
               // Never leave the dialog greyed out forever if the Host stops
               // answering mid-request.
@@ -1131,6 +1135,7 @@ window.__ModuleLoader__.load({
             'error.code.bad-json': 'The request body was not valid JSON.',
             'error.code.method-not-allowed': 'That action does not accept this request method.',
             'error.code.unknown-action': 'Unknown action.',
+            'error.code.untrusted-caller': 'This request did not come from the DeepSeek Harness page. Reload the page and try again.',
           })
           ctx.locale.register('dsh-session-revenant', 'zh', {
             'action.delete': '删除会话',
@@ -1213,6 +1218,7 @@ window.__ModuleLoader__.load({
             'error.code.bad-json': '请求体不是合法的 JSON。',
             'error.code.method-not-allowed': '这个操作不接受这种请求方式。',
             'error.code.unknown-action': '未知操作。',
+            'error.code.untrusted-caller': '这个请求不是从 DeepSeek Harness 页面发来的。刷新页面后重试。',
           })
         } catch {
           // A locale registration clash must not disable the action itself.
